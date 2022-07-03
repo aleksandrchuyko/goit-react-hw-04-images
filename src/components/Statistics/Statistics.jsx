@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Box } from 'components/Box';
 import { StatisticField } from './Statistics.styled';
 
@@ -17,4 +18,12 @@ export const Statistics = ({
       <StatisticField>Positive feedback: {positivePercent}%</StatisticField>
     </Box>
   );
+};
+
+Statistics.propTypes = {
+  good: PropTypes.number.isRequired,
+  neutral: PropTypes.number.isRequired,
+  bad: PropTypes.number.isRequired,
+  totalFeedbacks: PropTypes.number.isRequired,
+  positivePercent: PropTypes.number.isRequired,
 };

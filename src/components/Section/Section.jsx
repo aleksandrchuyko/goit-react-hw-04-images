@@ -1,11 +1,17 @@
+import PropTypes from 'prop-types';
 import { Box } from 'components/Box';
 import { SectionTitle } from './Section.styled';
 
-export const Section = props => {
+export const Section = ({ title, children }) => {
   return (
     <Box as="section" display="flex" flexDirection="column">
-      <SectionTitle>{props.title}</SectionTitle>
-      {props.children}
+      <SectionTitle>{title}</SectionTitle>
+      {children}
     </Box>
   );
+};
+
+Section.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node,
 };
