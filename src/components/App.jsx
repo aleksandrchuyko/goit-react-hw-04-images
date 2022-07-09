@@ -1,38 +1,14 @@
 import React, { Component } from 'react';
 
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+
 import { Box } from './Box';
-import { Section } from './Section/Section';
-import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
-import { Statistics } from './Statistics/Statistics';
-import { Notification } from './Notification/Notification';
-import {
-  countTotalFeedback,
-  countPositiveFeedbackPercentage,
-} from '../utils/index';
+import Utils from '../utils/index';
 
 export class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  };
-
-  leaveFeedback = option => {
-    this.setState(prevState => ({
-      [option]: prevState[option] + 1,
-    }));
-  };
+  state = {};
 
   render() {
-    const options = Object.keys(this.state);
-    const { good, neutral, bad } = this.state;
-
-    const totalFeedbacks = countTotalFeedback(this.state);
-    const positivePercent = countPositiveFeedbackPercentage(
-      good,
-      totalFeedbacks
-    );
-
     return (
       <Box
         as="main"
@@ -48,25 +24,7 @@ export class App extends Component {
           color: '#010101',
         }}
       >
-        <Section title="Please leave feedback">
-          <FeedbackOptions
-            options={options}
-            onLeaveFeedback={this.leaveFeedback}
-          ></FeedbackOptions>
-        </Section>
-        <Section title="Statistics">
-          {totalFeedbacks ? (
-            <Statistics
-              good={good}
-              neutral={neutral}
-              bad={bad}
-              totalFeedbacks={totalFeedbacks}
-              positivePercent={positivePercent}
-            ></Statistics>
-          ) : (
-            <Notification message={'There is no feedback'}></Notification>
-          )}
-        </Section>
+
       </Box>
     );
   }
