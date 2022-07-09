@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import { Box } from './Box';
-import Utils from '../utils/index';
+// import Utils from '../utils/index';
 import { Searchbar } from './Searchbar/Searchbar';
 
 export class App extends Component {
