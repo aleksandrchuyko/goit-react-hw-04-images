@@ -4,6 +4,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import { Box } from './Box';
 import Utils from '../utils/index';
+import { Searchbar } from './Searchbar/Searchbar';
 
 export class App extends Component {
   state = {};
@@ -11,7 +12,7 @@ export class App extends Component {
   render() {
     return (
       <Box
-        as="main"
+        // as="main"
         display="flex"
         flexDirection="column"
         alignItems="start"
@@ -24,7 +25,7 @@ export class App extends Component {
           color: '#010101',
         }}
       >
-
+        <Searchbar></Searchbar>
       </Box>
     );
   }
