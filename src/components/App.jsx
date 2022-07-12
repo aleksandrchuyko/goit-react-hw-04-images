@@ -1,32 +1,35 @@
 import React, { Component } from 'react';
+import { GlobalStyles } from './GlobalStyles';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-
-import { Box } from './Box';
-// import Utils from '../utils/index';
 import { Searchbar } from './Searchbar/Searchbar';
+import { ImageGallery } from './ImageGallery/ImageGallery';
+
 
 export class App extends Component {
-  state = {};
+  state = {
+    description: '',
+    page: 1,
+  };
+
+  onSearchSubmit = text => {
+    if (text !== this.state.description) {
+      this.setState({
+        description: text,
+        page: 1,
+      });
+    }
+  };
 
   render() {
+    const { description, page } = this.state;
     return (
-      <Box
-        // as="main"
-        display="flex"
-        flexDirection="column"
-        alignItems="start"
-        style={{
-          height: '100vh',
-          // display: 'flex',
-          // justifyContent: 'center',
-          // alignItems: 'center',
-          fontSize: 40,
-          color: '#010101',
-        }}
-      >
-        <Searchbar></Searchbar>
-      </Box>
+      <>
+        <GlobalStyles />
+        <Searchbar onSubmit={this.onSearchSubmit}></Searchbar>
+        <ImageGallery description={description} page={page}></ImageGallery>
+        
+      </>
     );
   }
 }
