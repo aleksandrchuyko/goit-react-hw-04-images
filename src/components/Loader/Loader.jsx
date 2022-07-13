@@ -1,9 +1,15 @@
 import { Audio } from 'react-loader-spinner';
+import { Box } from 'components/Box';
 
-export const Loader = ({ isLoading }) => {
+export const Loader = () => {
   return (
-      <div>
-          {isLoading && (<Audio height="100" width="100" color="grey" ariaLabel="loading" />)}
-    </div>
+    <Box
+      height="80vh"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Audio height="300" width="300" color="grey" ariaLabel="loading" />
+    </Box>
   );
 };
