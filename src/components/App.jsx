@@ -5,7 +5,6 @@ import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 
-
 export class App extends Component {
   state = {
     description: '',
@@ -26,9 +25,8 @@ export class App extends Component {
     return (
       <>
         <GlobalStyles />
-        <Searchbar onSubmit={this.onSearchSubmit}></Searchbar>
-        <ImageGallery description={description} page={page}></ImageGallery>
-        
+        <Searchbar onSubmit={this.onSearchSubmit} />
+        <ImageGallery description={description} page={page} />
       </>
     );
   }

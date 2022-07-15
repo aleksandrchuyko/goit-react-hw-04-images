@@ -1,24 +1,24 @@
 import axios from 'axios';
 
 export const getImagesByDescription = async (description, page = 1) => {
-  const url = 'https://pixabay.com/api/';
-  const params = {
+  axios.defaults.baseURL = 'https://pixabay.com/api/';
+  axios.defaults.params = {
     key: '27605426-0fda2c4b0cfa268906a19ec96',
-    q: '',
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: 'true',
-    page: 1,
     per_page: 12,
   };
 
-  params.q = description;
-  params.page = page;
+  const params = {
+    q: description,
+    page: page,
+  };
+
+  const pixabay = axios.create({ params });
 
   try {
-    return await axios.get(url, {
-      params,
-    });
+    return await pixabay.get();
   } catch (error) {
     return error.message;
   }

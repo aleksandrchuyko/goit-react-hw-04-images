@@ -4,12 +4,12 @@ import { Box } from 'components/Box';
 export const Loader = () => {
   return (
     <Box
-      height="80vh"
+      height="30vh"
       display="flex"
       alignItems="center"
       justifyContent="center"
     >
-      <Audio height="300" width="300" color="grey" ariaLabel="loading" />
+      <Audio height="150" width="150" color="grey" ariaLabel="loading" />
     </Box>
   );
 };

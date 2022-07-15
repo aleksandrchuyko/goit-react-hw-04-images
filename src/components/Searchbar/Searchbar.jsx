@@ -5,12 +5,12 @@ import {
   ButtonLabel,
   SearchInput,
 } from './Searchbar.styled';
+import PropTypes from 'prop-types';
 
 export const Searchbar = ({ onSubmit }) => {
   const handleSubmit = e => {
     e.preventDefault();
     const description = e.target.elements.description.value;
-    // console.log(description);
     onSubmit(description);
     e.target.reset();
   };
@@ -32,4 +32,8 @@ export const Searchbar = ({ onSubmit }) => {
       </SearchForm>
     </PageHeader>
   );
+};
+
+Searchbar.propTypes = {
+  onButtonClick: PropTypes.func.isRequired,
 };

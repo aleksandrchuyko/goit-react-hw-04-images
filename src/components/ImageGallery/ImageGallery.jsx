@@ -1,12 +1,13 @@
 import { Component } from 'react';
 import { GalleryList } from './ImageGallery.styled';
 import { Box } from 'components/Box';
-import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
+import { ImageGalleryItem } from 'components/ImageGallery/ImageGalleryItem/ImageGalleryItem';
 import { Button } from 'components/Button/Button';
 import { Loader } from 'components/Loader/Loader';
 import { getImagesByDescription } from 'services/pixabay-api';
 import { Status } from 'constants';
 import { Modal } from 'components/Modal/Modal';
+import PropTypes from 'prop-types';
 
 export class ImageGallery extends Component {
   state = {
@@ -22,6 +23,9 @@ export class ImageGallery extends Component {
     const isNewSearch = prevProps.description !== this.props.description;
     const isNewPage = prevState.page < this.state.page;
     if (isNewSearch || isNewPage) {
+      if (isNewSearch) {
+        this.setState({ images: [] });
+      }
       this.setState({ status: Status.PENDING });
       getImagesByDescription(this.props.description, this.state.page)
         .then(result => {
@@ -72,7 +76,28 @@ export class ImageGallery extends Component {
       );
     }
     if (status === Status.PENDING) {
-      return <Loader></Loader>;
+      return (
+        <Box display="flex" flexDirection="column">
+          {images && (
+            <GalleryList>
+              {images.map(image => (
+                <li key={image.id}>
+                  <ImageGalleryItem
+                    id={image.id}
+                    miniImg={image.webformatURL}
+                    largeImg={image.largeImageURL}
+                    onTileClick={this.handleImageTileClick}
+                  />
+                </li>
+              ))}
+            </GalleryList>
+          )}
+          {isShowModal && (
+            <Modal src={modalImgUrl} onClose={this.toggleModal} />
+          )}
+          <Loader />
+        </Box>
+      );
     }
     if (status === Status.RESOLVED) {
       return (
@@ -85,13 +110,13 @@ export class ImageGallery extends Component {
                   miniImg={image.webformatURL}
                   largeImg={image.largeImageURL}
                   onTileClick={this.handleImageTileClick}
-                ></ImageGalleryItem>
+                />
               </li>
             ))}
           </GalleryList>
-          <Button onButtonClick={this.handleLoadMore}></Button>
+          <Button onButtonClick={this.handleLoadMore} />
           {isShowModal && (
-            <Modal src={modalImgUrl} onClose={this.toggleModal}></Modal>
+            <Modal src={modalImgUrl} onClose={this.toggleModal} />
           )}
         </Box>
       );
@@ -105,3 +130,7 @@ export class ImageGallery extends Component {
     }
   }
 }
+
+ImageGallery.propTypes = {
+  description: PropTypes.string.isRequired,
+};
