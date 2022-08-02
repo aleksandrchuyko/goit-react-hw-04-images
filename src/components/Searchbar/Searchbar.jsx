@@ -11,8 +11,8 @@ export const Searchbar = ({ onSubmit }) => {
   const handleSubmit = e => {
     e.preventDefault();
     const description = e.target.elements.description.value;
-    onSubmit(description);
     e.target.reset();
+    onSubmit(description);
   };
 
   return (
