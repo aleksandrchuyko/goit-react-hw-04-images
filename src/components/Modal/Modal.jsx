@@ -5,9 +5,7 @@ import PropTypes from 'prop-types';
 export const Modal = ({ src, onClose }) => {
   useEffect(() => {
     const handleKeyEsc = e => {
-      console.log('handle');
       if (e.code === 'Escape') {
-        console.log(e.code);
         onClose();
       }
     };
