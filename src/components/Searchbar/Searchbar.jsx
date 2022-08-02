@@ -35,5 +35,5 @@ export const Searchbar = ({ onSubmit }) => {
 };
 
 Searchbar.propTypes = {
-  onButtonClick: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };

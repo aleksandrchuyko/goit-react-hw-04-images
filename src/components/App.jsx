@@ -1,33 +1,24 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { GlobalStyles } from './GlobalStyles';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 
-export class App extends Component {
-  state = {
-    description: '',
-    page: 1,
-  };
+export const App = () => {
+  const [description, setDescription] = useState('');
 
-  onSearchSubmit = text => {
-    if (text !== this.state.description) {
-      this.setState({
-        description: text,
-        page: 1,
-      });
+  const onSearchSubmit = text => {
+    if (text !== description) {
+      setDescription(text);
     }
   };
 
-  render() {
-    const { description, page } = this.state;
-    return (
-      <>
-        <GlobalStyles />
-        <Searchbar onSubmit={this.onSearchSubmit} />
-        <ImageGallery description={description} page={page} />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <GlobalStyles />
+      <Searchbar onSubmit={onSearchSubmit} />
+      <ImageGallery description={description} />
+    </>
+  );
+};

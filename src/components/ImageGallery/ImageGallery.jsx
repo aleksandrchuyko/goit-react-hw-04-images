@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { GalleryList } from './ImageGallery.styled';
 import { Box } from 'components/Box';
 import { ImageGalleryItem } from 'components/ImageGallery/ImageGalleryItem/ImageGalleryItem';
@@ -9,94 +9,80 @@ import { Status } from 'constants';
 import { Modal } from 'components/Modal/Modal';
 import PropTypes from 'prop-types';
 
-export class ImageGallery extends Component {
-  state = {
-    status: Status.IDLE,
-    images: [],
-    page: 1,
-    error: '',
-    isShowModal: false,
-    modalImgUrl: '',
-  };
+export const ImageGallery = ({ description }) => {
+  const [status, setStatus] = useState(Status.IDLE);
+  const [images, setImages] = useState([]);
+  const [page, setPage] = useState(null);
+  const [error, setError] = useState('');
+  const [isShowModal, setIsShowModal] = useState(false);
+  const [modalImgUrl, setModalImgUrl] = useState('');
 
-  componentDidUpdate(prevProps, prevState) {
-    const isNewSearch = prevProps.description !== this.props.description;
-    const isNewPage = prevState.page < this.state.page;
-    if (isNewSearch || isNewPage) {
-      if (isNewSearch) {
-        this.setState({ images: [] });
-      }
-      this.setState({ status: Status.PENDING });
-      getImagesByDescription(this.props.description, this.state.page)
+  const query = useRef('');
+
+  useEffect(() => {
+    if (!description.trim()) {
+      return;
+    }
+    query.current = description;
+    setImages([]);
+    setPage(1);
+  }, [description]);
+
+  useEffect(() => {
+    if (query.current) {
+      setStatus(Status.PENDING);
+      getImagesByDescription(query.current, page)
         .then(result => {
-          const newImages = isNewPage
-            ? [...prevState.images, ...result.data.hits]
-            : [...result.data.hits];
-          this.setState(prevState => ({
-            status: Status.RESOLVED,
-            images: newImages,
-          }));
+          setImages(state => [...state, ...result.data.hits]);
+          setStatus(Status.RESOLVED);
         })
-        .catch(error => {
-          this.setState({
-            error,
-            status: Status.REJECTED,
-          });
-          console.log(error);
+        .catch(err => {
+          setError(err.message);
+          setStatus(Status.REJECTED);
         });
     }
-  }
+  }, [page]);
 
-  handleLoadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const handleLoadMore = () => {
+    setPage(state => state + 1);
   };
 
-  handleImageTileClick = (isShowModal, modalImgUrl) => {
-    this.setState({
-      isShowModal,
-      modalImgUrl,
-    });
+  const handleImageTileClick = (isShowModal, modalImgUrl) => {
+    setIsShowModal(isShowModal);
+    setModalImgUrl(modalImgUrl);
   };
 
-  toggleModal = () => {
-    this.setState(prevState => ({ isShowModal: !prevState.isShowModal }));
+  const toggleModal = () => {
+    setIsShowModal(state => !state);
   };
 
-  render() {
-    const { images, status, error, isShowModal, modalImgUrl } = this.state;
+  return (
+    <Box display="flex" flexDirection="column">
+      {status === Status.IDLE && (
+        <p>Введите ключевое слово для поиска картинки...</p>
+      )}
+      {images && (
+        <GalleryList>
+          {images.map(image => (
+            <li key={image.id}>
+              <ImageGalleryItem
+                id={image.id}
+                miniImg={image.webformatURL}
+                largeImg={image.largeImageURL}
+                onTileClick={handleImageTileClick}
+              />
+            </li>
+          ))}
+        </GalleryList>
+      )}
+      {status === Status.PENDING && <Loader />}
 
-    return (
-      <Box display="flex" flexDirection="column">
-        {status === Status.IDLE && (
-          <p>Введите ключевое слово для поиска картинки...</p>
-        )}
-        {images && (
-          <GalleryList>
-            {images.map(image => (
-              <li key={image.id}>
-                <ImageGalleryItem
-                  id={image.id}
-                  miniImg={image.webformatURL}
-                  largeImg={image.largeImageURL}
-                  onTileClick={this.handleImageTileClick}
-                />
-              </li>
-            ))}
-          </GalleryList>
-        )}
-        {status === Status.PENDING && <Loader />}
-
-        {isShowModal && <Modal src={modalImgUrl} onClose={this.toggleModal} />}
-        {status === Status.RESOLVED && (
-          <Button onButtonClick={this.handleLoadMore} />
-        )}
-        {status === Status.REJECTED && (<p>{error}</p>)}
-      </Box>
-    );
-  }
-}
+      {isShowModal && <Modal src={modalImgUrl} onClose={toggleModal} />}
+      {status === Status.RESOLVED && <Button onButtonClick={handleLoadMore} />}
+      {status === Status.REJECTED && <p>{error}</p>}
+    </Box>
+  );
+};
 
 ImageGallery.propTypes = {
   description: PropTypes.string.isRequired,
